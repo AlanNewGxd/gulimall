@@ -33,6 +33,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!--引入公共common依赖-->
         <dependency>
             <groupId>com.gxd.gulimall</groupId>
             <artifactId>gulimall-common</artifactId>
