@@ -1,6 +1,6 @@
 package com.gxd.gulimall.product;
 
-import com.gxd.common.utils.PageUtils;
+
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.service.BrandService;
@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
@@ -40,12 +38,17 @@ class GulimallProductApplicationTests {
             System.out.println("查询结果："+list.get(i));
         }
 
+        R.add("list",list);
+
+        System.out.println();
         System.out.println(R.ok().put("result",list));
 
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("page","1");
-        params.put("limit","10");
-        PageUtils pageUtils = brandService.queryPage(params);
-        System.out.println(R.ok().put("list",pageUtils));
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        params.put("page","1");
+//        params.put("limit","10");
+//        PageUtils pageUtils = brandService.queryPage(params);
+//        System.out.println(R.ok().put("list",pageUtils));
+
+
     }
 }

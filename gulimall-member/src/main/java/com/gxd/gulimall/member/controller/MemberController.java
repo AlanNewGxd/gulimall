@@ -1,19 +1,15 @@
 package com.gxd.gulimall.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.gxd.gulimall.member.entity.MemberEntity;
-import com.gxd.gulimall.member.service.MemberService;
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
+import com.gxd.gulimall.member.entity.MemberEntity;
+import com.gxd.gulimall.member.feign.CouponFeignService;
+import com.gxd.gulimall.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -29,6 +25,26 @@ import com.gxd.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    CouponFeignService couponFeignService;
+
+    /*
+     * @Description 获取会员优惠券信息
+     * @Param []
+     * @Author guxiaodong
+     * @Date 10:54 2021/4/22
+     **/
+    @RequestMapping("/couponsList")
+    public R getMemberCouponList(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("尊贵的张三");
+        R membercoupons = couponFeignService.membercoupons();
+        R.ok().put("member",memberEntity);
+        R.ok().put("couponsList",membercoupons.get("coupons"));
+        System.out.println(R.ok());
+        return R.ok().put("member",memberEntity).put("couponsList",membercoupons.get("coupons"));
+    }
 
     /**
      * 列表

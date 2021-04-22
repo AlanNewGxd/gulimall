@@ -26,6 +26,20 @@ public class CouponController {
     private CouponService couponService;
 
     /**
+     * @Description 测试获取会员下的所属优惠券信息
+     * @Param   R: 全系统的所有返回类型都是
+     * @Author guxiaodong
+     * @Date 17:14 2021/4/21
+     **/
+    @RequestMapping("/member/couponsList")
+    public R membercoupons(){
+        //正常查库，我们这里简化，先构造一个优惠券返回
+        CouponEntity couponEntity = new CouponEntity();
+        couponEntity.setCouponName("满200减40优惠券");
+        return R.ok().put("coupons",Arrays.asList(couponEntity));
+    }
+    
+    /**
      * 列表
      */
     @RequestMapping("/list")
