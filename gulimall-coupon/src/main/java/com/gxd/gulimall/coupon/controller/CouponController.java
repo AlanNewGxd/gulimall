@@ -5,6 +5,8 @@ import com.gxd.common.utils.R;
 import com.gxd.gulimall.coupon.entity.CouponEntity;
 import com.gxd.gulimall.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -19,12 +21,31 @@ import java.util.Map;
  * @email 86466280@qq.com
  * @date 2021-04-14 17:26:29
  */
+@RefreshScope
 @RestController
 @RequestMapping("coupon/coupon")
 public class CouponController {
+
     @Autowired
     private CouponService couponService;
 
+    @Value("${coupon.user.name}")
+    private String name;
+
+    @Value("${coupon.user.age}")
+    private Integer age;
+
+    /*
+     * @Description 测试
+     * @Param []
+     * @Author guxiaodong
+     * @Date 10:34 2021/4/23
+     **/
+    @RequestMapping("/test")
+    public R test(){
+        return R.ok().put("name",name).put("age",age);
+    }
+    
     /**
      * @Description 测试获取会员下的所属优惠券信息
      * @Param   R: 全系统的所有返回类型都是

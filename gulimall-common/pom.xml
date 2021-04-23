@@ -71,11 +71,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <!-- 后加的启动报错-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
+            <version>2.2.2.RELEASE</version>
+        </dependency>
+
+        <!--nacos服务配置依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
             <version>2.2.2.RELEASE</version>
         </dependency>
 
