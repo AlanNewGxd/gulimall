@@ -85,6 +85,12 @@
             <version>2.2.2.RELEASE</version>
         </dependency>
 
+        <!-- 若bootstrap配置不生效，加入以下依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
