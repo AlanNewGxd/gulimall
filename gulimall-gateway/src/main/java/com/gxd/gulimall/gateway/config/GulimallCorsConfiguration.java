@@ -29,11 +29,11 @@ public class GulimallCorsConfiguration {
         // 允许跨域的请求方式
         corsConfiguration.addAllowedMethod("*");
 
-        // 允许跨域的请求来源
+        // 允许跨域的请求来源  高版本的使用
         List<String> allowedOriginPatterns = new ArrayList<String>();
         allowedOriginPatterns.add("*");
         corsConfiguration.setAllowedOriginPatterns(allowedOriginPatterns);
-//      corsConfiguration.addAllowedOrigin("*");
+//      corsConfiguration.addAllowedOrigin("*");  适用于低版本的spring-boot-starter-parent
 
         // 是否允许携带cookie跨域
         corsConfiguration.setAllowCredentials(true);
