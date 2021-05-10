@@ -19,6 +19,7 @@ import java.util.List;
  * @author alannew
  * @email 86466280@qq.com
  * @date 2021-04-13 17:18:31
+ *
  */
 @RestController
 @RequestMapping("product/category")
@@ -70,10 +71,13 @@ public class CategoryController {
 
     /**
      * 删除
+     * @RequestBody获取请求体，必须发送post请求  springmvc 自动将请求体的数据json，转化为对应的对象
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+//		categoryService.removeByIds(Arrays.asList(catIds));   物理删除
+
+        categoryService.removeMenuByIds(Arrays.asList(catIds));
 
         return R.ok();
     }
