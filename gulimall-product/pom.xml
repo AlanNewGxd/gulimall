@@ -40,6 +40,13 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!--阿里云对象存储oss-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.10.2</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
