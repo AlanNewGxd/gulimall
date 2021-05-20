@@ -25,7 +25,7 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>/?.*),/$\{segment}
 
-        - id: third_party_route
+        - id:  third_party_route
           uri: lb://gulimall-third-party
           predicates:
             - Path=/api/thirdparty/**
@@ -39,5 +39,3 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}  # 把/api/* 改变成 /renren-fast/*
           #http://localhost:88/api/captcha.jpg  http://localhost:8080/renren-fast/captcha.jpg
-
-
