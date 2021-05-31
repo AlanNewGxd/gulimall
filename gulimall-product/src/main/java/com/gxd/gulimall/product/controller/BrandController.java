@@ -52,15 +52,15 @@ public class BrandController {
     /**
      * 保存  @Valid这个方法需要校验
      */
-//    @RequestMapping("/save")
-//    public R save(@Valid @RequestBody BrandEntity brand){
-//		brandService.save(brand);
-//
-//        return R.ok();
-//    }
-
     @RequestMapping("/save")
-    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+    public R save(@Valid @RequestBody BrandEntity brand){
+		brandService.save(brand);
+
+        return R.ok();
+    }
+
+    @RequestMapping("/save2")
+    public R save2(@Valid @RequestBody BrandEntity brand, BindingResult result){
         // 手动处理异常
         if( result.hasErrors()){
             Map<String,String> map=new HashMap<>();
