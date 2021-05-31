@@ -2,10 +2,13 @@ package com.gxd.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 品牌
@@ -27,14 +30,18 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 品牌名
 	 */
+	@NotBlank(message = "品牌名必须非空")
 	private String name;
 	/**
 	 * 品牌logo地址
 	 */
+	@NotEmpty
+	@URL(message = "logo地址不合法")
 	private String logo;
 	/**
 	 * 介绍
 	 */
+	@NotEmpty
 	private String descript;
 	/**
 	 * 显示状态[0-不显示；1-显示]
@@ -43,10 +50,12 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 检索首字母
 	 */
+	@NotEmpty
 	private String firstLetter;
 	/**
 	 * 排序
 	 */
+	@NotNull
 	private Integer sort;
 
 }

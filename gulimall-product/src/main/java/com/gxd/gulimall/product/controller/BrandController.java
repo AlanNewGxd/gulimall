@@ -5,9 +5,12 @@ import com.gxd.common.utils.R;
 import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -47,11 +50,33 @@ public class BrandController {
     }
 
     /**
-     * 保存
+     * 保存  @Valid这个方法需要校验
      */
+//    @RequestMapping("/save")
+//    public R save(@Valid @RequestBody BrandEntity brand){
+//		brandService.save(brand);
+//
+//        return R.ok();
+//    }
+
     @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand){
-		brandService.save(brand);
+    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+        // 手动处理异常
+        if( result.hasErrors()){
+            Map<String,String> map=new HashMap<>();
+            //1.获取错误的校验结果
+            result.getFieldErrors().forEach((item)->{
+                //获取发生错误时的message
+                String message = item.getDefaultMessage();
+                //获取发生错误的字段
+                String field = item.getField();
+                map.put(field,message);
+            });
+            return R.error(400,"提交的数据不合法").put("data",map);
+        }else {
+
+        }
+        brandService.save(brand);
 
         return R.ok();
     }
