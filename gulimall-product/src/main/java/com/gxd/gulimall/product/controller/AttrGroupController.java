@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 
-
 /**
  * 属性分组
  *
@@ -35,6 +34,16 @@ public class AttrGroupController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 列表（多参数获取）
+     * @param  catelogId 0的话查所有
+     */
+    @RequestMapping("/list/{catelogId}")
+    public R list(@RequestParam Map<String, Object> params,@PathVariable Long catelogId){
+        //PageUtils page = attrGroupService.queryPage(params);
+        PageUtils page = attrGroupService.queryPage(params,catelogId);
+        return R.ok().put("page", page);
+    }
 
     /**
      * 信息
