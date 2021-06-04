@@ -4,6 +4,7 @@ import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.product.entity.AttrGroupEntity;
 import com.gxd.gulimall.product.service.AttrGroupService;
+import com.gxd.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("product/attrgroup")
 public class AttrGroupController {
+
     @Autowired
     private AttrGroupService attrGroupService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * 列表
@@ -45,13 +50,26 @@ public class AttrGroupController {
         return R.ok().put("page", page);
     }
 
+//    /**
+//     * 信息
+//     */
+//    @RequestMapping("/info/{attrGroupId}")
+//    public R info(@PathVariable("attrGroupId") Long attrGroupId){
+//		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+//
+//        return R.ok().put("attrGroup", attrGroup);
+//    }
+
     /**
      * 信息
      */
     @RequestMapping("/info/{attrGroupId}")
+    //@RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
-		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
-
+        AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+        // 用当前当前分类id查询完整路径并写入 attrGroup
+        Long[] catelogIds= categoryService.findCateLogPath(attrGroup.getCatelogId());
+        attrGroup.setCatelogIds(catelogIds);
         return R.ok().put("attrGroup", attrGroup);
     }
 
