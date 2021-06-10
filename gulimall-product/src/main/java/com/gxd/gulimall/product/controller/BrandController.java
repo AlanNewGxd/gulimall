@@ -2,10 +2,12 @@ package com.gxd.gulimall.product.controller;
 
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
+import com.gxd.common.valid.UpdateGroup;
 import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -82,14 +84,26 @@ public class BrandController {
     }
 
     /**
-     * 修改
+     * 修改状态
      */
-    @RequestMapping("/update")
-    public R update(@RequestBody BrandEntity brand){
+    @RequestMapping("/update/status")
+    public R updateStatus(@RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();
     }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    //@RequiresPermissions("product:brand:update")
+    public R update(@Validated(value = {UpdateGroup.class}) @RequestBody BrandEntity brand) {
+        brandService.updateDetails(brand);
+
+        return R.ok();
+    }
+
 
     /**
      * 删除

@@ -1,20 +1,32 @@
 package com.gxd.gulimall.product.service.impl;
 
-import org.springframework.stereotype.Service;
-import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.Query;
-
+import com.gxd.gulimall.product.dao.BrandDao;
 import com.gxd.gulimall.product.dao.CategoryBrandRelationDao;
+import com.gxd.gulimall.product.dao.CategoryDao;
+import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.entity.CategoryBrandRelationEntity;
+import com.gxd.gulimall.product.entity.CategoryEntity;
 import com.gxd.gulimall.product.service.CategoryBrandRelationService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Map;
 
 
 @Service("categoryBrandRelationService")
 public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandRelationDao, CategoryBrandRelationEntity> implements CategoryBrandRelationService {
+
+    @Resource
+    private BrandDao brandDao;
+
+    @Resource
+    private CategoryDao categoryDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -24,6 +36,31 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void saveDetails(CategoryBrandRelationEntity categoryBrandRelation) {
+        Long brandId = categoryBrandRelation.getBrandId();
+        Long catelogId = categoryBrandRelation.getCatelogId();
+        //1、查询品牌详细信息
+        BrandEntity brandEntity = brandDao.selectById(brandId);
+        //2、查询分类详细信息
+        CategoryEntity categoryEntity = categoryDao.selectById(catelogId);
+        System.out.println(brandEntity);
+        System.out.println(categoryEntity);
+        // 将信息保存到categoryBrandRelation中
+        categoryBrandRelation.setBrandName(brandEntity.getName());
+        categoryBrandRelation.setCatelogName(categoryEntity.getName());
+        // 保存到数据库中
+        this.save(categoryBrandRelation);
+    }
+
+    @Override
+    public void updateDetails(Long brandId, String name) {
+        CategoryBrandRelationEntity relationEntity = new CategoryBrandRelationEntity();
+        relationEntity.setBrandId(brandId);
+        relationEntity.setBrandName(name);
+        this.update(relationEntity,new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id",brandId));
     }
 
 }

@@ -45,7 +45,7 @@ public class AttrGroupEntity implements Serializable {
 	 */
 	private Long catelogId;
 	/**
-	 * 三级分类修改的时候回显路径
+	 * 三级分类修改的时候回显路径   catelogPath
 	 */
 	@TableField(exist = false) // 数据库中不存在
 	private Long[] catelogIds;
