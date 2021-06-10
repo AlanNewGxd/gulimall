@@ -6,6 +6,6 @@ package com.gxd.common.valid;
  * @title TODO
  * @date 2021/6/9 17:42
  */
-public class UpdateGroup {
+public interface UpdateGroup {
 
 }
