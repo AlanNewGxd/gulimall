@@ -7,9 +7,12 @@ import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.Query;
 import com.gxd.gulimall.product.dao.CategoryDao;
 import com.gxd.gulimall.product.entity.CategoryEntity;
+import com.gxd.gulimall.product.service.CategoryBrandRelationService;
 import com.gxd.gulimall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +26,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 //    TODO: 2021/4/28 可以注入使用，也可以用mybatisplus的ServiceImpl<CategoryDao, CategoryEntity>
 //    @Autowired
 //    CategoryDao categoryDao;
+    @Resource
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -89,6 +94,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(paths);
         return paths.toArray(new Long[paths.size()]); // 1级  2级  3级
     }
+
     /**
      * 递归收集所有父分类
      */
@@ -102,6 +108,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
         return paths;
     }
+    /**
+     * 级联更新所有关联的数据
+     * @param category
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.baseMapper.updateById(category);
 
-
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+    }
 }

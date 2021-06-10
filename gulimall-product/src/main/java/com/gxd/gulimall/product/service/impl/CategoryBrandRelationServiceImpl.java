@@ -12,7 +12,9 @@ import com.gxd.gulimall.product.dao.CategoryDao;
 import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.gxd.gulimall.product.entity.CategoryEntity;
+import com.gxd.gulimall.product.service.BrandService;
 import com.gxd.gulimall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,6 +29,12 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
 
     @Resource
     private CategoryDao categoryDao;
+
+    @Resource
+    private CategoryBrandRelationDao relationDao;
+
+    @Autowired
+    private BrandService brandService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -61,6 +69,11 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         relationEntity.setBrandId(brandId);
         relationEntity.setBrandName(name);
         this.update(relationEntity,new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id",brandId));
+    }
+
+    @Override
+    public void updateCategory(Long catId, String name) {
+        this.baseMapper.updateCategory(catId,name);
     }
 
 }
