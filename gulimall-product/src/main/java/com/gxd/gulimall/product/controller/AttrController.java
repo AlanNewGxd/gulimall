@@ -2,9 +2,9 @@ package com.gxd.gulimall.product.controller;
 
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
-import com.gxd.gulimall.product.entity.AttrEntity;
 import com.gxd.gulimall.product.service.AttrService;
 import com.gxd.gulimall.product.vo.AttrRespVo;
+import com.gxd.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,22 +68,44 @@ public class AttrController {
         return R.ok().put("attr", respVo);
     }
 
+//    /**
+//     * 保存
+//     */
+//    @RequestMapping("/save")
+//    public R save(@RequestBody AttrEntity attr){
+//		attrService.save(attr);
+//
+//        return R.ok();
+//    }
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    //@RequiresPermissions("product:attr:save")
+    public R save(@RequestBody AttrVo attr){
+        attrService.saveAttr(attr);
 
         return R.ok();
     }
+
+//    /**
+//     * 修改
+//     */
+//    @RequestMapping("/update")
+//    public R update(@RequestBody AttrEntity attr){
+//		attrService.updateById(attr);
+//
+//        return R.ok();
+//    }
 
     /**
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    //@RequiresPermissions("product:attr:update")
+    public R update(@RequestBody AttrVo attr){
+
+        attrService.updateAttrById(attr);
 
         return R.ok();
     }

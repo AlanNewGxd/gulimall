@@ -1,6 +1,7 @@
 package com.gxd.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gxd.common.constant.ProductConstant;
@@ -17,9 +18,11 @@ import com.gxd.gulimall.product.entity.CategoryEntity;
 import com.gxd.gulimall.product.service.AttrService;
 import com.gxd.gulimall.product.service.CategoryService;
 import com.gxd.gulimall.product.vo.AttrRespVo;
+import com.gxd.gulimall.product.vo.AttrVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -225,5 +228,52 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         }
 
         return respVo;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveAttr(AttrVo attr) {
+        AttrEntity attrEntity = new AttrEntity();
+        BeanUtils.copyProperties(attr,attrEntity);
+        //1、保存基本数据
+        this.save(attrEntity);
+
+        //2、保存关联关系
+        //判断类型，如果是基本属性就设置分组id
+        if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() && attr.getAttrGroupId() != null) {
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            relationEntity.setAttrGroupId(attr.getAttrGroupId());
+            relationEntity.setAttrId(attrEntity.getAttrId());
+            relationDao.insert(relationEntity);
+        }
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateAttrById(AttrVo attr) {
+
+        AttrEntity attrEntity = new AttrEntity();
+        BeanUtils.copyProperties(attr,attrEntity);
+
+        this.updateById(attrEntity);
+
+        if (attrEntity.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
+            //1、修改分组关联
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            relationEntity.setAttrGroupId(attr.getAttrGroupId());
+            relationEntity.setAttrId(attr.getAttrId());
+
+            Integer count = relationDao.selectCount(new QueryWrapper<AttrAttrgroupRelationEntity>()
+                    .eq("attr_id", attr.getAttrId()));
+
+            if (count > 0) {
+                relationDao.update(relationEntity,
+                        new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()));
+            } else {
+                relationDao.insert(relationEntity);
+            }
+        }
+
     }
 }
