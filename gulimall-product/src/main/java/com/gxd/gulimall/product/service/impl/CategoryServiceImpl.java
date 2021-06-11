@@ -119,4 +119,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
     }
+
+    //[2,29,20]
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+
+        List<Long> paths = new ArrayList<>();
+
+        //递归查询是否还有父节点
+        List<Long> parentPath = findParentPath(catelogId, paths);
+
+        //进行一个逆序排列
+        Collections.reverse(parentPath);
+
+        return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
+    }
 }
