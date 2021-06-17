@@ -4,6 +4,7 @@ import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.product.entity.SpuInfoEntity;
 import com.gxd.gulimall.product.service.SpuInfoService;
+import com.gxd.gulimall.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,10 +61,22 @@ public class SpuInfoController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
-    public R save(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.save(spuInfo);
+//    @RequestMapping("/save")
+//    public R save(@RequestBody SpuInfoEntity spuInfo){
+//		spuInfoService.save(spuInfo);
+//
+//        return R.ok();
+//    }
 
+    /**
+     * 发布商品
+     * 会保存很多信息！
+     */
+    @RequestMapping("/save")
+    // @RequiresPermissions("product:spuinfo:save")
+    public R save(@RequestBody SpuSaveVo vo){
+        //spuInfoService.save(spuInfo);
+        spuInfoService.saveSpuInfo(vo);
         return R.ok();
     }
 
@@ -83,6 +96,18 @@ public class SpuInfoController {
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
 		spuInfoService.removeByIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+    /**
+     * 20、商品上架
+     * POST /product/spuinfo/{spuId}/up
+     */
+    @PostMapping("/{spuId}/up")
+    // @RequiresPermissions("product:spuinfo:delete")
+    public R up(@PathVariable("spuId") Long spuId){
+        spuInfoService.up(spuId);
 
         return R.ok();
     }

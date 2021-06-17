@@ -1,16 +1,19 @@
 package com.gxd.gulimall.product.service.impl;
 
-import org.springframework.stereotype.Service;
-import java.util.Map;
+import com.alibaba.nacos.client.naming.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.Query;
-
 import com.gxd.gulimall.product.dao.SpuImagesDao;
 import com.gxd.gulimall.product.entity.SpuImagesEntity;
 import com.gxd.gulimall.product.service.SpuImagesService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("spuImagesService")
@@ -26,4 +29,19 @@ public class SpuImagesServiceImpl extends ServiceImpl<SpuImagesDao, SpuImagesEnt
         return new PageUtils(page);
     }
 
+    @Override
+    public void saveImages(Long id, List<String> images) {
+        if (CollectionUtils.isEmpty(images)) {
+
+        }else {
+            List<SpuImagesEntity> collect = images.stream().map(img -> {
+                SpuImagesEntity spuImagesEntity = new SpuImagesEntity();
+                spuImagesEntity.setSpuId(id);
+                spuImagesEntity.setImgUrl(img);
+
+                return spuImagesEntity;
+            }).collect(Collectors.toList());
+            this.saveBatch(collect);
+        }
+    }
 }
