@@ -2,13 +2,16 @@ package com.gxd.gulimall.product.controller;
 
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
+import com.gxd.gulimall.product.entity.ProductAttrValueEntity;
 import com.gxd.gulimall.product.service.AttrService;
+import com.gxd.gulimall.product.service.ProductAttrValueService;
 import com.gxd.gulimall.product.vo.AttrRespVo;
 import com.gxd.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,6 +28,18 @@ import java.util.Map;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+
+    /**
+     * 22、获取spu规格
+     * pms_product_attr_value
+     */
+    @GetMapping("/base/listforspu/{spuId}")
+    public R baseAttrlistforspu(@PathVariable("spuId") Long spuId) {
+        List<ProductAttrValueEntity> entities = productAttrValueService.baseAttrlistforspu(spuId);
+        return R.ok().put("data", entities);
+    }
 
     /**
      * 查询规格参数信息

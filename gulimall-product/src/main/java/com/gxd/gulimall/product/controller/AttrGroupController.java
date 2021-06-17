@@ -7,6 +7,7 @@ import com.gxd.gulimall.product.entity.AttrGroupEntity;
 import com.gxd.gulimall.product.service.AttrGroupService;
 import com.gxd.gulimall.product.service.AttrService;
 import com.gxd.gulimall.product.service.CategoryService;
+import com.gxd.gulimall.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,6 +136,18 @@ public class AttrGroupController {
         PageUtils page = attrService.getNoRelationAttr(params,attrgroupId);
 
         return R.ok().put("page",page);
+    }
+
+    // /product/attrgroup/{catelogId}/withattr
+    // 列出当前属性分组 关联的 所有属性
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId) {
+        // 1、查出当前分类下的所有分组
+
+        // 2、查出每个分组关联的所有基本属性
+        List<AttrGroupWithAttrsVo> data = attrGroupService.getAttrGroupWithAttrs(catelogId);
+
+        return R.ok().put("data", data);
     }
 
 }
