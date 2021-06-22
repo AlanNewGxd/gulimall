@@ -67,18 +67,20 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
         //3、sms_member_price
         List<MemberPrice> memberPrice = skuReductionTo.getMemberPrice();
 
-        List<MemberPriceEntity> collect = memberPrice.stream().map(mem -> {
-            MemberPriceEntity memberPriceEntity = new MemberPriceEntity();
-            memberPriceEntity.setSkuId(skuReductionTo.getSkuId());
-            memberPriceEntity.setMemberLevelId(mem.getId());
-            memberPriceEntity.setMemberLevelName(mem.getName());
-            memberPriceEntity.setMemberPrice(mem.getPrice());
-            memberPriceEntity.setAddOther(1);
-            return memberPriceEntity;
-        }).filter(item -> {
-            return item.getMemberPrice().compareTo(BigDecimal.ZERO) == 1;
-        }).collect(Collectors.toList());
+        if(memberPrice!=null&&memberPrice.size()>0){
+            List<MemberPriceEntity> collect = memberPrice.stream().map(mem -> {
+                MemberPriceEntity memberPriceEntity = new MemberPriceEntity();
+                memberPriceEntity.setSkuId(skuReductionTo.getSkuId());
+                memberPriceEntity.setMemberLevelId(mem.getId());
+                memberPriceEntity.setMemberLevelName(mem.getName());
+                memberPriceEntity.setMemberPrice(mem.getPrice());
+                memberPriceEntity.setAddOther(1);
+                return memberPriceEntity;
+            }).filter(item -> {
+                return item.getMemberPrice().compareTo(BigDecimal.ZERO) == 1;
+            }).collect(Collectors.toList());
 
-        memberPriceService.saveBatch(collect);
+            memberPriceService.saveBatch(collect);
+        }
     }
 }

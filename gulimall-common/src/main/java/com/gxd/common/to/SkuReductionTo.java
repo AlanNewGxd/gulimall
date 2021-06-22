@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class SkuReductionTo {
     private Long skuId;
+
     private int fullCount;
     private BigDecimal discount;
     private int countStatus;

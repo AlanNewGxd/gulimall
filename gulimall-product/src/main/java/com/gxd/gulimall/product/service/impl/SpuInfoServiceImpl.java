@@ -80,7 +80,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         //2、保存spu的描述图片  pms_spu_info_desc
         //3、保存spu的图片集   pms_spu_images
         //4、保存spu的规格参数; pms_product_attr_value
-        //5、保存spu的积分信息; gulimall_sms-》ms_spu_bounds【跨库】
+        //5、保存spu的积分信息; gulimall_sms-》sms_spu_bounds【跨库】
         //6、保存当前spu对应的所有sku信息;
         //6.1)、sku的基本信.息;pms_sku_info
         //6.2)、sku的图片信息;pms_sku_images
@@ -118,7 +118,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         }).collect(Collectors.toList());
         valueService.saveProductAttr(collect);
 
-        //5、保存spu的积分信息;gulimall_sms-》ms_spu_bounds【跨库】
+        //5、保存spu的积分信息;gulimall_sms-》sms_spu_bounds【跨库】
         Bounds bounds = vo.getBounds();
         SpuBoundTo spuBoundTo = new SpuBoundTo();
         BeanUtils.copyProperties(bounds, spuBoundTo);
@@ -182,16 +182,22 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 // sms_sku_full_reduction
                 // sms_member_price
                 SkuReductionTo skuReductionTo = new SkuReductionTo();
-                // TODO 无用的优惠信息剔除[去远程服务端修改判断，这里不判断]
-                // 如果 满足件数<=0 满足价格<=0 剔除
-                //if (item.getFullCount() > 0 || new BigDecimal(0).compareTo(item.getFullPrice()) == -1 || !StringUtils.isEmpty(item.getMemberPrice())) {
-                BeanUtils.copyProperties(item, skuReductionTo);
+//                // TODO 无用的优惠信息剔除[去远程服务端修改判断，这里不判断]
+//                // 如果 满足件数<=0 满足价格<=0 剔除
+//                //if (item.getFullCount() > 0 || new BigDecimal(0).compareTo(item.getFullPrice()) == -1 || !StringUtils.isEmpty(item.getMemberPrice())) {
+                BeanUtils.copyProperties(item, skuReductionTo); //todo debug的时候数据复制不生效
+                skuReductionTo.setMemberPrice(item.getMemberPrice());
+                skuReductionTo.setFullCount(item.getFullCount());
+                skuReductionTo.setDiscount(item.getDiscount());
+                skuReductionTo.setCountStatus(item.getCountStatus());
+                skuReductionTo.setFullPrice(item.getFullPrice());
+                skuReductionTo.setPriceStatus(item.getPriceStatus());
+                skuReductionTo.setReducePrice(item.getReducePrice());
                 skuReductionTo.setSkuId(skuId);
                 R r1 = couponFeignService.saveSkuReduction(skuReductionTo);
                 if (r1.getCode() != 0) {
                     log.error("远程保存sku优惠信息失败");
                 }
-
             });
         }
     }
