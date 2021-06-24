@@ -25,3 +25,9 @@ server:
   port: 50000
 
 
+#日志打印级别debug
+logging:
+  level:
+    com.gxd.gulimall.ware: debug
+
+

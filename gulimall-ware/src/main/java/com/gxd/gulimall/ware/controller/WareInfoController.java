@@ -4,6 +4,7 @@ import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.ware.entity.WareInfoEntity;
 import com.gxd.gulimall.ware.service.WareInfoService;
+import com.gxd.gulimall.ware.vo.FareVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,18 @@ import java.util.Map;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
+
+    /**
+     * 获取运费信息，订单服务远程调用
+     * @return
+     */
+    @GetMapping(value = "/fare")
+    public R getFare(@RequestParam("addrId") Long addrId) {
+
+        FareVo fare = wareInfoService.getFare(addrId);
+
+        return R.ok().setData(fare);
+    }
 
     /**
      * 列表
