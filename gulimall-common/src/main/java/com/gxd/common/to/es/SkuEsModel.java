@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author guxiaodong
  * @version 1.0
- * @title SkuEsModel
+ * @title SkuEsModel  es模型
  * @date 2021/6/17 15:39
  */
 @Data

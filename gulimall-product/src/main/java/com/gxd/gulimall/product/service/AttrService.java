@@ -32,6 +32,12 @@ public interface AttrService extends IService<AttrEntity> {
 
     void updateAttrById(AttrVo attr);
 
+    /**
+     * @Description 在指定的所有属性集合中，筛出检索属性集合
+     * @Param [attrIds]
+     * @Author guxiaodong
+     * @Date 16:43 2021/6/25
+     **/
     List<Long> selectSearchAttrIds(List<Long> attrIds);
 }
 

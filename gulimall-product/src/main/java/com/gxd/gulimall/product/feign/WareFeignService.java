@@ -9,6 +9,8 @@ import java.util.List;
 
 @FeignClient("gulimall-ware")
 public interface WareFeignService {
+
     @PostMapping("/ware/waresku/hasstock")
     R getSkusHasStock(@RequestBody List<Long> skuIds);
+
 }
