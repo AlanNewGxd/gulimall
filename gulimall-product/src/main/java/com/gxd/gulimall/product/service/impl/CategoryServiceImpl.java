@@ -9,6 +9,7 @@ import com.gxd.gulimall.product.dao.CategoryDao;
 import com.gxd.gulimall.product.entity.CategoryEntity;
 import com.gxd.gulimall.product.service.CategoryBrandRelationService;
 import com.gxd.gulimall.product.service.CategoryService;
+import com.gxd.gulimall.product.vo.Catalog2Vo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,5 +134,66 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(parentPath);
 
         return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    /**
+     * 查询一级分类。
+     * 父ID是0， 或者  层级是1
+     */
+    @Override
+    public List<CategoryEntity> getLevel1Categorys() {
+        System.out.println("调用了 getLevel1Categorys  查询了数据库........【一级分类】");
+        return baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+    }
+
+    // TODO 产生堆外内存溢出：OutOfDirectMemoryError
+    // 1）springboot2.0以后默认使用lettuce作为操作redis的客户端。他使用netty进行网络通信
+    // 2）lettuce的bug导致netty堆外内存溢出 -Xmx1024m；netty如果没有指定堆外内存，默认使用-Xmx1024m，跟jvm设置的一样【迟早会出异常】
+    //  可以通过-Dio.netty.maxDirectMemory进行设置【仍然会异常】
+    //  解决方案：不能使用-Dio.netty.maxDirectMemory
+    //  1）升级lettuce客户端；【2.3.2已解决】【lettuce使用netty吞吐量很大】
+    //  2）切换使用jedis客户端【这里学习一下如何使用jedis，但是最后不选用】
+
+    /**
+     * 使用Spring Cache简化 缓存存取操作【不需要自己调用redistemplate客户端来存取数据了，直接加注解】
+     * 【但是读写锁还是需要redisson配合使用】
+     */
+    @Override
+    public Map<String, List<Catalog2Vo>> getCatalogJson() {
+        // 一次性获取所有数据
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+        System.out.println("调用了 getCatalogJson  查询了数据库........【三级分类】");
+        // 1）、所有1级分类
+        List<CategoryEntity> level1Categorys = getParent_cid(selectList, 0L);
+
+        // 2）、封装数据
+        Map<String, List<Catalog2Vo>> collect = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), level1 -> {
+            // 查到当前1级分类的2级分类
+            List<CategoryEntity> category2level = getParent_cid(selectList, level1.getCatId());
+            List<Catalog2Vo> catalog2Vos = null;
+            if (category2level != null) {
+                catalog2Vos = category2level.stream().map(level12 -> {
+                    // 查询当前2级分类的3级分类
+                    List<CategoryEntity> category3level = getParent_cid(selectList, level12.getCatId());
+                    List<Catalog2Vo.Catalog3Vo> catalog3Vos = null;
+                    if (category3level != null) {
+                        catalog3Vos = category3level.stream().map(level13 -> {
+                            return new Catalog2Vo.Catalog3Vo(level12.getCatId().toString(), level13.getCatId().toString(), level13.getName());
+                        }).collect(Collectors.toList());
+                    }
+                    return new Catalog2Vo(level1.getCatId().toString(), catalog3Vos, level12.getCatId().toString(), level12.getName());
+                }).collect(Collectors.toList());
+            }
+            return catalog2Vos;
+        }));
+        return collect;
+    }
+
+    /**
+     * 查询出父ID为 parent_cid的List集合
+     */
+    private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList, Long parent_cid) {
+        return selectList.stream().filter(item -> item.getParentCid() == parent_cid).collect(Collectors.toList());
+        //return baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", level.getCatId()));
     }
 }
