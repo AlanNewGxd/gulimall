@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2021/5/31 16:15
  */
 @Slf4j
-@RestControllerAdvice(basePackages = "com.gxd.gulimall.product.controller")//管理的controller
+@RestControllerAdvice(basePackages = "com.gxd.gulimall.product.app")//管理的controller
 public class GulimallExceptionControllerAdvice {
 
     @ExceptionHandler(value = Exception.class) // 也可以返回ModelAndView
