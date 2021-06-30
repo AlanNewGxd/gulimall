@@ -53,6 +53,11 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}  # 把/api/* 改变成 /renren-fast/*
           #http://localhost:88/api/captcha.jpg  http://localhost:8080/renren-fast/captcha.jpg
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+#            - Host=121.89.210.14
 
           # 按照规则，url=baidu则转发到www.baidu.com；并且Query断言可以是正则表达式
           # http://localhost:88/hello?url=qq 解析：1、按照规则转发到https://www.qq.com/hello
