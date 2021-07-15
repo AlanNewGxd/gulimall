@@ -21,7 +21,7 @@ spring:
         - id:  product_route
           uri: lb://gulimall-product # 注册中心的商品服务
           predicates:
-            - Path=/api/product/**
+            - Path=/api/product/**,/hello
           filters:
             - RewritePath=/api/(?<segment>/?.*),/$\{segment}
 
@@ -56,8 +56,7 @@ spring:
         - id: gulimall_host_route
           uri: lb://gulimall-product
           predicates:
-            - Host=gulimall.com,item.gulimall.com
-#            - Host=121.89.210.14
+            - Host=**.gulimall.com
 
           # 按照规则，url=baidu则转发到www.baidu.com；并且Query断言可以是正则表达式
           # http://localhost:88/hello?url=qq 解析：1、按照规则转发到https://www.qq.com/hello
