@@ -1,18 +1,17 @@
 package com.gxd.gulimall.product;
 
 
-import com.gxd.gulimall.product.entity.BrandEntity;
 import com.gxd.gulimall.product.service.BrandService;
 import com.gxd.gulimall.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Slf4j
 @SpringBootTest
@@ -23,6 +22,17 @@ class GulimallProductApplicationTests {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void testRedis(){
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        ops.set("hello","world"+ UUID.randomUUID().toString());
+        String o = ops.get("hello");
+        System.out.println(o);
+    }
 
     @Test
     public void findpaths(){
@@ -65,7 +75,7 @@ class GulimallProductApplicationTests {
 
     @Test
     void contextLoads() {
-        BrandEntity brandEntity = new BrandEntity();
+//        BrandEntity brandEntity = new BrandEntity();
 //        brandEntity.setName("苹果");
 //        brandEntity.setDescript("真好吃");
 //        brandService.save(brandEntity);
@@ -96,24 +106,24 @@ class GulimallProductApplicationTests {
 //        PageUtils pageUtils = brandService.queryPage(params);
 //        System.out.println(R.ok().put("list",pageUtils));
 
-        List<Integer> numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);
-        // 获取对应的平方数
-        List<Integer> squaresList =
-                numbers.stream()
-                        .map( i -> i*i)
-                        .distinct()
-                        .collect(Collectors.toList());
-
-        squaresList.forEach(System.out::println);
-
-        Random random = new Random();
-        random.ints().limit(10).sorted().forEach(System.out::println);
-
-        List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");
-        List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
-
-        System.out.println("筛选列表: " + filtered);
-        String mergedString = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.joining(", "));
-        System.out.println("合并字符串: " + mergedString);
+//        List<Integer> numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);
+//        // 获取对应的平方数
+//        List<Integer> squaresList =
+//                numbers.stream()
+//                        .map( i -> i*i)
+//                        .distinct()
+//                        .collect(Collectors.toList());
+//
+//        squaresList.forEach(System.out::println);
+//
+//        Random random = new Random();
+//        random.ints().limit(10).sorted().forEach(System.out::println);
+//
+//        List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");
+//        List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
+//
+//        System.out.println("筛选列表: " + filtered);
+//        String mergedString = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.joining(", "));
+//        System.out.println("合并字符串: " + mergedString);
     }
 }

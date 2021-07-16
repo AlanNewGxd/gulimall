@@ -15,6 +15,9 @@ spring:
     time-zone: GMT+8
   thymeleaf:
     cache: false
+  redis:
+    host: 192.168.56.10
+    port: 6379
 
 # MapperScan
 # sql映射文件位置
