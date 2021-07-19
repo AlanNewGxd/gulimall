@@ -5,13 +5,10 @@ import com.gxd.gulimall.product.service.BrandService;
 import com.gxd.gulimall.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-
-import java.util.Arrays;
-import java.util.UUID;
 
 @Slf4j
 @SpringBootTest
@@ -26,28 +23,36 @@ class GulimallProductApplicationTests {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    @Test
-    public void testRedis(){
-        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-        ops.set("hello","world"+ UUID.randomUUID().toString());
-        String o = ops.get("hello");
-        System.out.println(o);
-    }
+    @Autowired
+    RedissonClient redissonClient;
 
     @Test
-    public void findpaths(){
-        Long[] catelogIds = categoryService.findCateLogPath(225L);
-        log.info("完整路径：{}",Arrays.asList(catelogIds));
+    void testRedisson() {
+        System.out.println(redissonClient);
     }
 
-    @Test
-    public void testUpload(){
+//    @Test
+//    public void testRedis(){
+//        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+//        ops.set("hello","world"+ UUID.randomUUID().toString());
+//        String o = ops.get("hello");
+//        System.out.println(o);
+//    }
+
+//    @Test
+//    public void findpaths(){
+//        Long[] catelogIds = categoryService.findCateLogPath(225L);
+//        log.info("完整路径：{}",Arrays.asList(catelogIds));
+//    }
+
+//    @Test
+//    public void testUpload(){
 
         // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
 //        String endpoint = "oss-cn-zhangjiakou.aliyuncs.com";
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-//        String accessKeyId = "LTAI5tJiMCkdzm88Q38B5uFT";
-//        String accessKeySecret = "6v6GDQQDqDJ2ATo1OdWsdtpro3zg5C";
+//        String accessKeyId = "";
+//        String accessKeySecret = "";
 
         // 创建OSSClient实例。
 //        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
@@ -69,12 +74,12 @@ class GulimallProductApplicationTests {
         // 关闭OSSClient。
 //        ossClient.shutdown();
 
-        System.out.println("上传成功。。。");
+//        System.out.println("上传成功。。。");
+//
+//    }
 
-    }
-
-    @Test
-    void contextLoads() {
+//    @Test
+//    void contextLoads() {
 //        BrandEntity brandEntity = new BrandEntity();
 //        brandEntity.setName("苹果");
 //        brandEntity.setDescript("真好吃");
@@ -125,5 +130,5 @@ class GulimallProductApplicationTests {
 //        System.out.println("筛选列表: " + filtered);
 //        String mergedString = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.joining(", "));
 //        System.out.println("合并字符串: " + mergedString);
-    }
+//    }
 }
