@@ -3,6 +3,8 @@ package com.gxd.gulimall.product.web;
 import com.gxd.gulimall.product.entity.CategoryEntity;
 import com.gxd.gulimall.product.service.CategoryService;
 import com.gxd.gulimall.product.vo.Catalog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,9 @@ public class IndexController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    RedissonClient redisson;
 
 
     @GetMapping({"/", "index.html"})
@@ -52,6 +57,23 @@ public class IndexController {
     @ResponseBody
     @GetMapping("/hello")
     public String hello() {
+        //1.获取一把锁，只要锁的名字一样就是同一把锁
+        RLock mylock = redisson.getLock("mylock");
+
+        //2,加锁
+        mylock.lock(); //阻塞式等待
+
+        try {
+            System.out.println("加锁成功，执行业务。。。"+Thread.currentThread().getId());
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            //3.解锁
+            mylock.unlock();
+            System.out.println("解锁成功。。。"+Thread.currentThread().getId());
+        }
+        //此锁不会出现死锁，内置有自动续期功能--看门狗
         return "hello";
     }
 }
