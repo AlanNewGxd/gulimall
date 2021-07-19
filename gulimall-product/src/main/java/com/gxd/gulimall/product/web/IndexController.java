@@ -39,6 +39,16 @@ public class IndexController {
         return map;
     }
 
+    /**
+     * redis缓存,分布式锁,缓存穿透，雪崩，击穿
+     */
+    @ResponseBody
+    @GetMapping("/index/catalog2.json")
+    public Map<String, List<Catalog2Vo>> getCatalogJson2() {
+        Map<String, List<Catalog2Vo>> map = categoryService.getCatalogJson2();
+        return map;
+    }
+
     @ResponseBody
     @GetMapping("/hello")
     public String hello() {
