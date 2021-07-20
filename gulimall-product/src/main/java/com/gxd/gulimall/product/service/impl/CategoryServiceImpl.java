@@ -13,6 +13,8 @@ import com.gxd.gulimall.product.entity.CategoryEntity;
 import com.gxd.gulimall.product.service.CategoryBrandRelationService;
 import com.gxd.gulimall.product.service.CategoryService;
 import com.gxd.gulimall.product.vo.Catalog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -36,6 +38,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     StringRedisTemplate redisTemplate;
+
+    @Autowired
+    RedissonClient redisson;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -211,7 +216,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catlogJSON = redisTemplate.opsForValue().get("catlogJSON");
         if (StringUtils.isEmpty(catlogJSON)) {
             // 2、缓存中没有，查询数据库
-            catalogJsonFromDb = getCatalogJsonFromDbWithRedisLock();
+            catalogJsonFromDb = getCatalogJsonFromDbWithRedissonLock();
             // 3、数据查询结束放入缓存，但是要在同步代码块中放入缓存，否则有可能线程1还没放入缓存导致线程2重新查询一次
             return catalogJsonFromDb;
         } else {
@@ -225,7 +230,29 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     /**
      * 从数据库查询并封装分类数据
      * 查询三级分类
-     * 分布式锁：自己实现的
+     * 分布式锁：redisson
+     */
+    public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithRedissonLock() {
+        // 1、锁的名字。锁的粒度：越细越快
+        // 例：具体缓存的是某个数据，11号商品，product
+        RLock lock = redisson.getLock("catalogJson-lock");
+        lock.lock();
+        Map<String, List<Catalog2Vo>> dataFromDB = null;
+        try {
+            // 加锁成功....执行业务【内部会再判断一次redis是否有值】
+            dataFromDB = getDataFromDB();
+        } finally {
+            // 2、查询UUID是否是自己，是自己的lock就删除
+            // 查询+删除 必须是原子操作：lua脚本解锁
+            lock.unlock();
+        }
+        return dataFromDB;
+    }
+
+    /**
+     * 从数据库查询并封装分类数据
+     * 查询三级分类
+     * 分布式锁：自己实现的Redis
      */
     public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithRedisLock() {
         // 1、占本分布式锁。去redis占坑，同时设置过期时间
