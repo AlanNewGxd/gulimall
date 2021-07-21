@@ -161,8 +161,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     /**
      * 查询一级分类。
      * 父ID是0， 或者  层级是1
+     * 缓存击穿:大量并发进来同时查询一个正好过期的数据。解决:加锁; 默认未加锁【sync = true】本地锁
      */
-    @Cacheable(value = {"category"},key = "#root.method.name")
+    @Cacheable(value = {"category"},key = "#root.method.name", sync = true)
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
         System.out.println("调用了 getLevel1Categorys  查询了数据库........【一级分类】");
@@ -181,7 +182,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 使用Spring Cache简化 缓存存取操作【不需要自己调用redistemplate客户端来存取数据了，直接加注解】
      * 【但是读写锁还是需要redisson配合使用】
      */
-    @Cacheable(value = "category", key = "#root.methodName")
+    @Cacheable(value = "category", key = "#root.methodName", sync = true)
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
         // 一次性获取所有数据
