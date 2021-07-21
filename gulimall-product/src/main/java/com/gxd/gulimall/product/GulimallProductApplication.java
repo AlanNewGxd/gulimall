@@ -3,7 +3,6 @@ package com.gxd.gulimall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 /*
@@ -23,7 +22,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 		@Caching：组合以上多个操作
 		@CacheConfig：在类级别共享缓存的相同配置
  **/
-@EnableCaching
+//@EnableCaching  写到配置类了
 @EnableFeignClients(basePackages="com.gxd.gulimall.product.feign") //扫描接口方法注解
 @EnableDiscoveryClient
 @MapperScan("com.gxd.gulimall.product.dao")
