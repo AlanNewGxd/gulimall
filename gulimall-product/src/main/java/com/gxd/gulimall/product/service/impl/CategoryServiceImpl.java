@@ -153,7 +153,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 查询一级分类。
      * 父ID是0， 或者  层级是1
      */
-    @Cacheable({"category"})
+    @Cacheable(value = {"category"},key = "#root.method.name")
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
         System.out.println("调用了 getLevel1Categorys  查询了数据库........【一级分类】");
