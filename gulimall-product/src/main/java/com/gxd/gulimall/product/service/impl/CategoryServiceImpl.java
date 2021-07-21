@@ -16,6 +16,7 @@ import com.gxd.gulimall.product.vo.Catalog2Vo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -152,6 +153,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 查询一级分类。
      * 父ID是0， 或者  层级是1
      */
+    @Cacheable({"category"})
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
         System.out.println("调用了 getLevel1Categorys  查询了数据库........【一级分类】");
