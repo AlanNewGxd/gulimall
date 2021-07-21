@@ -22,8 +22,8 @@ spring:
     type: redis
     redis:
       time-to-live: 360000
-      key-prefix: CACHE_
-      use-key-prefix: false
+#      key-prefix: CACHE_
+      use-key-prefix: true
       cache-null-values: true   #缓存null值，可以防止缓存穿透
 # MapperScan
 # sql映射文件位置

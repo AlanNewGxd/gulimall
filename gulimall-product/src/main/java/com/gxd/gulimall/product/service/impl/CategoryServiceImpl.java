@@ -16,6 +16,7 @@ import com.gxd.gulimall.product.vo.Catalog2Vo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -125,7 +126,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     /**
      * 级联更新所有关联的数据
      * @param category
+     * @CacheEvict：失效模式
      */
+    //    @Caching(evict = {
+//            @CacheEvict(value = {"category"}, key = "'getLevel1Categorys'"),
+//            @CacheEvict(value = {"category"}, key = "'getCatalogJson'")
+//    })
+//    使用@CacheEvict，同时删除缓存名为category的所有缓存
+//    总结：存储同一类型的数据，都指定为同一个分区
+    @CacheEvict(value = {"category"},allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -172,6 +181,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 使用Spring Cache简化 缓存存取操作【不需要自己调用redistemplate客户端来存取数据了，直接加注解】
      * 【但是读写锁还是需要redisson配合使用】
      */
+    @Cacheable(value = "category", key = "#root.methodName")
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
         // 一次性获取所有数据
