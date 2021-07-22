@@ -25,13 +25,18 @@ public class ThreadTest2 {
 
         CompletableFuture<Integer> future1 = CompletableFuture.supplyAsync(() -> {
             System.out.println("当前线程：" + Thread.currentThread().getId());
-            int i = 10 / 2;
+            int i = 10 / 0;
             System.out.println("运行结果：" + i);
             return i;
-        }, excutor);
+        }, excutor).whenComplete((result,exception) -> {
+            //虽然能得到异常信息，但是没法修改返回数据
+            System.out.println("异步任务成功完成了...结果是：" + result + "异常是：" + exception);
+        }).exceptionally(throwable -> {
+            //可以感知异常，同时返回默认值
+            return 10;
+        });
 
         Integer integer = future1.get();
-
         System.out.println("main......end....."+integer);
     }
 }
