@@ -56,7 +56,12 @@ spring:
         - id: gulimall_host_route
           uri: lb://gulimall-product
           predicates:
-            - Host=**.gulimall.com
+            - Host=gulimall.com
+
+        - id: gulimall_search_route
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
 
           # 按照规则，url=baidu则转发到www.baidu.com；并且Query断言可以是正则表达式
           # http://localhost:88/hello?url=qq 解析：1、按照规则转发到https://www.qq.com/hello
