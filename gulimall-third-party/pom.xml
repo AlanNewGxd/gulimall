@@ -52,6 +52,13 @@
             <version>2.2.0.RELEASE</version>
         </dependency>
 
+        <!--属性提示工具-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

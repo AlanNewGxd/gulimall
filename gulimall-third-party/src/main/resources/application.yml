@@ -5,7 +5,13 @@ spring:
     nacos:
       discovery:
         server-addr: 172.16.50.104:8848
-
+    alicloud:
+      sms:
+        appcode: 213409bfb6f64fcd9478fda69f2251b1
+        host: https://gyytz.market.alicloudapi.com
+        path: /sms/smsSend
+        smsSignId: 2e65b1bb3d054466b82f0c9d125465e2
+        templateId: 63698e3463bd490dbc3edc46a20c55f5
 server:
   port: 30000
 
