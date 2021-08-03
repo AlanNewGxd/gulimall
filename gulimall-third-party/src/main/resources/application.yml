@@ -12,6 +12,11 @@ spring:
         path: /sms/smsSend
         smsSignId: 2e65b1bb3d054466b82f0c9d125465e2
         templateId: 63698e3463bd490dbc3edc46a20c55f5
+    chinatelecom:
+      sms:
+        host: http://172.16.20.30:31273
+        path: /tymh_interface_sms/random_code
+
 server:
   port: 30000
 

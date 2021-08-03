@@ -1,12 +1,17 @@
 package com.gxd.gulimall.thirdparty;
 
 import com.aliyun.oss.OSSClient;
+import com.gxd.common.utils.HttpUtils;
 import com.gxd.gulimall.thirdparty.component.SmsComponent;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class GulimallThirdPartyApplicationTests {
@@ -16,10 +21,10 @@ class GulimallThirdPartyApplicationTests {
     @Resource
     SmsComponent smsComponent;
 
-    @Test
-    void testSms() {
-        smsComponent.sendCode("16602789607", "996655");
-    }
+//    @Test
+//    void testSms() {
+//        smsComponent.sendCode("16602789607", "996655");
+//    }
 
     @Test
     void contextLoads() {
@@ -81,4 +86,31 @@ class GulimallThirdPartyApplicationTests {
 //        }
     }
 
+    @Test
+    public void dxsendsms(){
+        String host = "http://172.16.20.30:31273";
+        String path = "/tymh_interface_sms/random_code";
+        String method = "GET";
+        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> querys = new HashMap<String, String>();
+        querys.put("id", "18001130501");
+        querys.put("type", "1");
+        try {
+            /**
+             * 重要提示如下:
+             * HttpUtils请从
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+             * 下载
+             *
+             * 相应的依赖请参照
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+             */
+            HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
+            System.out.println(response.toString());
+            //获取response的body
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
