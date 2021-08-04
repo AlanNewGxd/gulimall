@@ -3,14 +3,14 @@ package com.gxd.gulimall.thirdparty.controller;
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.thirdparty.component.DxSmsComponent;
 import com.gxd.gulimall.thirdparty.component.SmsComponent;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Controller
+/**
+ * @author AlanNew
+ */
+@RestController
 @RequestMapping(value = "/sms")
 public class SmsSendController {
 
@@ -26,10 +26,10 @@ public class SmsSendController {
      * @param code
      * @return
      */
-    @GetMapping(value = "/sendCode")
-    public R sendCode(@RequestParam("phone") String phone) {
+    @RequestMapping(value = "/sendCode",method = RequestMethod.GET)
+    public R sendCode(@RequestParam("phone") String phone,@RequestParam("code") String code) {
         //发送验证码
-        dxSmsComponent.sendCode(phone);
+        dxSmsComponent.sendCode(phone,code);
         return R.ok();
     }
 }

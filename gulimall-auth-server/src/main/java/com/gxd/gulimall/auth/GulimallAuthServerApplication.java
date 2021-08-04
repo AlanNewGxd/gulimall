@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@EnableFeignClients
+@EnableFeignClients(basePackages="com.gxd.gulimall.auth.feign") //扫描接口方法注解
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GulimallAuthServerApplication {

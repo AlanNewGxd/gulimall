@@ -24,7 +24,7 @@ public class DxSmsComponent {
     private String host;
     private String path;
 
-    public void sendCode(String phone) {
+    public void sendCode(String phone,String code) {
         String method = "GET";
         Map<String, String> headers = new HashMap<String, String>();
         Map<String, String> querys = new HashMap<String, String>();
