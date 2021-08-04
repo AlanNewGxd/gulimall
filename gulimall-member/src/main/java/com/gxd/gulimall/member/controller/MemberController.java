@@ -1,10 +1,14 @@
 package com.gxd.gulimall.member.controller;
 
+import com.gxd.common.exception.BizCodeEnum;
 import com.gxd.common.utils.PageUtils;
 import com.gxd.common.utils.R;
 import com.gxd.gulimall.member.entity.MemberEntity;
+import com.gxd.gulimall.member.exception.PhoneException;
+import com.gxd.gulimall.member.exception.UsernameException;
 import com.gxd.gulimall.member.feign.CouponFeignService;
 import com.gxd.gulimall.member.service.MemberService;
+import com.gxd.gulimall.member.vo.MemberUserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,6 +98,18 @@ public class MemberController {
     public R delete(@RequestBody Long[] ids){
 		memberService.removeByIds(Arrays.asList(ids));
 
+        return R.ok();
+    }
+
+    @PostMapping(value = "/register")
+    public R register(@RequestBody MemberUserRegisterVo vo) {
+        try {
+            memberService.register(vo);
+        } catch (PhoneException e) {
+            return R.error(BizCodeEnum.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnum.PHONE_EXIST_EXCEPTION.getMsg());
+        } catch (UsernameException e) {
+            return R.error(BizCodeEnum.USER_EXIST_EXCEPTION.getCode(),BizCodeEnum.USER_EXIST_EXCEPTION.getMsg());
+        }
         return R.ok();
     }
 

@@ -3,6 +3,7 @@ package com.gxd.gulimall.member.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gxd.common.utils.PageUtils;
 import com.gxd.gulimall.member.entity.MemberEntity;
+import com.gxd.gulimall.member.vo.MemberUserRegisterVo;
 
 import java.util.Map;
 
@@ -16,5 +17,11 @@ import java.util.Map;
 public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 用户注册
+     * @param vo
+     */
+    void register(MemberUserRegisterVo vo);
 }
 
