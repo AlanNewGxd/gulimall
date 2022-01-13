@@ -44,7 +44,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 172.16.50.104:8848 # 127.0.0.1:8848 # 本地nacos
+        server-addr: 192.168.56.11:8848 # 127.0.0.1:8848 # 本地nacos
 
 #mybatis
 mybatis-plus:

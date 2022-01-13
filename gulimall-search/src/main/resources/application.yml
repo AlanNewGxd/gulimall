@@ -4,7 +4,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 172.16.50.104:8848
+        server-addr: 192.168.56.11:8848
   thymeleaf:
     cache: false
 
